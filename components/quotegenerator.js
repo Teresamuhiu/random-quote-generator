@@ -9,13 +9,13 @@ const QuoteGenerator = () => {
   const fetchQuote = async () => {
     setLoading(true);
     try {
-      const response = await fetch("https://cors-anywhere.herokuapp.com/https://zenquotes.io/api/random");
-      if (!response.ok) {
-        throw new Error(`HTTP error! Status: ${response.status}`);
-      }
+      const response = await fetch("/api/quote");
       const data = await response.json();
-      setQuote(data[0].q);
-      setAuthor(data[0].a);
+      if (data.error) {
+        throw new Error(data.error);
+      }
+      setQuote(data[0].q); // Quote text
+      setAuthor(data[0].a); // Author
     } catch (error) {
       console.error("Error fetching quote:", error.message);
       setQuote("Oops! Couldn't fetch a quote. Please try again later.");
@@ -23,6 +23,7 @@ const QuoteGenerator = () => {
     }
     setLoading(false);
   };
+  
 
   return (
     <div className="bg-white shadow-lg rounded-lg p-8 w-96 text-center">
